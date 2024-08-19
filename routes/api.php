@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\OtpController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\User\ShowController as ProfileController;
+use App\Http\Controllers\Api\User\UpdateInfoController;
 
 Route::middleware('guest')->group(function () {
 
@@ -24,4 +25,5 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/profile', ProfileController::class);
+    Route::patch('/profile', UpdateInfoController::class);
 });

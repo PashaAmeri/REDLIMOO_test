@@ -25,7 +25,7 @@ class UsersService implements UsersServiceInterface
 
         $user->name = ucwords(strtolower($data['name']));
         $user->email = strtolower($data['email']);
-        $user->bio = $data['bio'];
+        $user->bio = $data['bio'] ?? NULL;
 
         $user->save();
 
