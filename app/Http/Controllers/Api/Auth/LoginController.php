@@ -31,11 +31,11 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
 
-        // try {
+        try {
 
             $otp = $this->otpService->check($request->phone, $request->otp);
 
-            if ($otp->status) {
+            if (!$otp->status) {
 
                 return response()->json([
                     'status' => false,
@@ -51,13 +51,13 @@ class LoginController extends Controller
                 'expires_in' => round(Carbon::now()->diffInSeconds($token->token->expires_at)),
                 'access_token' => $token->tokenResult->accessToken,
             ]);
-        // } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
 
-        //     return response()->json([
-        //         'data' => [],
-        //         'error' => 'Something went wrong!',
-        //         'stack' => $th,
-        //     ], Response::HTTP_CONFLICT);
-        // }
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong!',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
+        }
     }
 }
