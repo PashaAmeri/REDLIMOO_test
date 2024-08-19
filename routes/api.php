@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\OtpController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Post\PostsController;
 use App\Http\Controllers\Api\User\ShowController as ProfileController;
 use App\Http\Controllers\Api\User\UpdateInfoController;
 
@@ -26,4 +27,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/profile', ProfileController::class);
     Route::patch('/profile', UpdateInfoController::class);
+
+    Route::apiResource('posts', PostsController::class);
 });

@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Hash;
 
 //----------------- Constsnts
 
-const CLIENT_SECRET = 'DZbvJHpODUzwkMX8kvtO8aSAwaDbe8i91aR16y6k';
+const CLIENT_SECRET = 'OtTLZqZrbYbvRTTy5ddnuAelDbF4GKGuuLIg8ys1';
+
+const WRITER_ROLE = 'Writer';
 
 //----------------- functions
 
@@ -22,8 +24,6 @@ function checkClient(array $data): bool
             return false;
         }
     }
-
-
 
     return true;
 }
