@@ -34,13 +34,13 @@ class UpdateInfoController extends Controller
                 'success' => true,
                 'message' => 'User profile updated successfully.',
             ]);
-        // } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
 
-        //     return response()->json([
-        //         'data' => [],
-        //         'error' => 'Something went wrong',
-        //         'stack' => $th,
-        //     ], Response::HTTP_CONFLICT);
-        // }
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
+        }
     }
 }
