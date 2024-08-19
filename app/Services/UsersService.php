@@ -22,7 +22,7 @@ class UsersService implements UsersServiceInterface
             'name' => ucwords(strtolower($data['name'])),
             'email' => strtolower($data['email']),
             'phone' => $data['phone'],
-            'bio' => $data['bio'],
+            'bio' => $data['bio'] ?? NULL,
         ]);
     }
 

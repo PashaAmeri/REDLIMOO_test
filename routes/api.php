@@ -5,5 +5,5 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 
 Route::middleware('guest')->group(function () {
 
-    Route::post('register', RegisterController::class);
+    Route::post('/register', [RegisterController::class, 'store']);
 });

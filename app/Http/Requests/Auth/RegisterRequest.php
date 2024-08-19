@@ -28,8 +28,8 @@ class RegisterRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:' . User::class . ',email',
             'phone' => 'required|digits:11|regex:/(09)[0-9]{9}/|unique:' . User::class . ',phone',
+            'email' => 'required|string|email|max:255|unique:' . User::class . ',email',
             // 'otp' => 'numeric'
         ];
     }
