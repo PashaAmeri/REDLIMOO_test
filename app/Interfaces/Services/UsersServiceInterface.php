@@ -9,6 +9,6 @@ use Illuminate\Http\Request;
 interface UsersServiceInterface
 {
 
-    public function storeUser(array $userData): User|NULL;
+    public function storeUser(array $userData): User|false;
     public function updateProfile(User $user, array $data): User|NULL;
 }

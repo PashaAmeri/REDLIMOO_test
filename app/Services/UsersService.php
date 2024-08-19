@@ -11,15 +11,18 @@ use App\Traits\Users\ReferralCode;
 class UsersService implements UsersServiceInterface
 {
 
-    public function storeUser(array $data): User|NULL
+    public function storeUser(array $data): User|false
     {
+        if (!checkClient(request()->only(['grant_type', 'client_id', 'client_secret']))) {
+
+            return false;
+        }
 
         return User::create([
             'name' => ucwords(strtolower($data['name'])),
             'email' => strtolower($data['email']),
             'phone' => $data['phone'],
             'bio' => $data['bio'],
-            'password' => Hash::make($data['password']),
         ]);
     }
 
