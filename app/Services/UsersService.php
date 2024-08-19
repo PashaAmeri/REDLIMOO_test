@@ -32,4 +32,24 @@ class UsersService implements UsersServiceInterface
 
         return $user;
     }
+
+    public function generateToken(string $phone): object
+    {
+
+        // Fetch the user by phone number
+        $user = User::where('phone', $phone)->first();
+
+        // Create a token for the user
+        $tokenResult = $user->createToken(CLIENT_SECRET);
+        $token = $tokenResult->token;
+
+        // Optionally set token expiration
+        $token->expires_at = now()->addYear();
+        $token->save();
+
+        return (object) [
+            'tokenResult' => $tokenResult,
+            'token' => $token
+        ];
+    }
 }

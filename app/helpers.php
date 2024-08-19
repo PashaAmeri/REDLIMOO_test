@@ -3,6 +3,10 @@
 use Laravel\Passport\Client;
 use Illuminate\Support\Facades\Hash;
 
+//----------------- Constsnts
+
+const CLIENT_SECRET = '99VSGAxp66Mkt6H05vzVWiF95FPWg8yNXfHyRMgj';
+
 //----------------- functions
 
 function checkClient(array $data): bool

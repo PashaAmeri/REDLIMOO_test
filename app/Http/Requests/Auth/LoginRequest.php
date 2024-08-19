@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,8 @@ class LoginRequest extends FormRequest
     {
 
         return [
-            'phone' => ['required', 'digits:11', 'regex:/(09)[0-9]{9}/'],
-            'password' => ['required', 'string'],
+            'phone' => ['required', 'digits:11', 'regex:/(09)[0-9]{9}/', 'exists:' . User::class . ',phone'],
+            'otp' => ['required', 'numeric', 'digits:6'],
         ];
     }
 

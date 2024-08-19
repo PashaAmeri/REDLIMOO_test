@@ -2,36 +2,62 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Models\User;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\Request;
+use App\Interfaces\Services\OtpServiceInterface;
+use App\Interfaces\Services\UsersServiceInterface;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
 
-    public function login(LoginRequest $request){
+    // protected property fot service instance
+    private UsersServiceInterface $userService;
+    private OtpServiceInterface $otpService;
 
-        Auth
+    /**
+     * 
+     *  Loading Serivce instances 
+     */
+    public function __construct(UsersServiceInterface $userService, OtpServiceInterface $otpService)
+    {
+
+        $this->userService = $userService;
+        $this->otpService = $otpService;
     }
 
-    // public function login(LoginRequest $request)
-    // {
+    public function login(LoginRequest $request)
+    {
 
-    //     $tokenRequest = $request->create(
-    //         '/oauth/token',
-    //         'POST',
-    //         [
-    //             'grant_type' => 'otp_grant',
-    //             'client_id' => 'client_id',
-    //             'client_secret' => 'client_secret',
-    //             'phone' => 'phone',
-    //             'otp' => 'otp',
-    //             'scope' => '',
-    //         ]
-    //     );
+        // try {
 
-    //     $response = app()->handle($tokenRequest);
+            $otp = $this->otpService->check($request->phone, $request->otp);
 
-    //     return response()->json(json_decode($response->getContent()), $response->getStatusCode());
-    // }
+            if ($otp->status) {
+
+                return response()->json([
+                    'status' => false,
+                    'username' => $request->phone,
+                    'message' => $otp->message
+                ], Response::HTTP_NOT_ACCEPTABLE);
+            }
+
+            $token = $this->userService->generateToken($request->phone);
+
+            return response()->json([
+                'token_type' => 'Bearer',
+                'expires_in' => round(Carbon::now()->diffInSeconds($token->token->expires_at)),
+                'access_token' => $token->tokenResult->accessToken,
+            ]);
+        // } catch (\Throwable $th) {
+
+        //     return response()->json([
+        //         'data' => [],
+        //         'error' => 'Something went wrong!',
+        //         'stack' => $th,
+        //     ], Response::HTTP_CONFLICT);
+        // }
+    }
 }
