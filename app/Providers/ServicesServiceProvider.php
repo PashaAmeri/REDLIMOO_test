@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\UsersService;
 use Illuminate\Support\ServiceProvider;
+use App\Interfaces\Services\UsersServiceInterface;
 
 class ServicesServiceProvider extends ServiceProvider
 {
@@ -11,14 +13,7 @@ class ServicesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
-    }
 
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-        //
+        $this->app->bind(UsersServiceInterface::class, UsersService::class);
     }
 }
