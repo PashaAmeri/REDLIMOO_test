@@ -30,7 +30,7 @@ class RegisterController extends Controller
     public function store(RegisterRequest $request)
     {
 
-        // try {
+        try {
 
             // create user
             $user = $this->userService->storeUser($request->validated());
@@ -54,13 +54,13 @@ class RegisterController extends Controller
                 ],
                 'message' => 'User created successfully',
             ]);
-        // } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
 
-        //     return response()->json([
-        //         'data' => [],
-        //         'error' => 'Something went wrong!',
-        //         'stack' => $th,
-        //     ], Response::HTTP_CONFLICT);
-        // }
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong!',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
+        }
     }
 }

@@ -13,10 +13,6 @@ class UsersService implements UsersServiceInterface
 
     public function storeUser(array $data): User|false
     {
-        if (!checkClient(request()->only(['grant_type', 'client_id', 'client_secret']))) {
-
-            return false;
-        }
 
         return User::create([
             'name' => ucwords(strtolower($data['name'])),

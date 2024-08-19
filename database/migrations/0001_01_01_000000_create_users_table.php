@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('email', 255)->unique();
             $table->string('phone', 11)->unique();
+            $table->integer('otp')->nullable();
             $table->text('bio')->nullable();
             $table->rememberToken();
             $table->timestamps();
