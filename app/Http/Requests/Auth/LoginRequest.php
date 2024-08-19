@@ -29,7 +29,7 @@ class LoginRequest extends FormRequest
 
         return [
             'phone' => ['required', 'digits:11', 'regex:/(09)[0-9]{9}/'],
-            // 'otp' => ['required', 'numeric'],
+            'password' => ['required', 'string'],
         ];
     }
 

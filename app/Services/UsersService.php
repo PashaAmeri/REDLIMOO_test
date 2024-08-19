@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Traits\Users\Generators;
 use Illuminate\Support\Facades\Hash;
 use App\Interfaces\Services\UsersServiceInterface;
-use App\Traits\Users\ReferralCode;
 
 class UsersService implements UsersServiceInterface
 {
@@ -19,6 +17,7 @@ class UsersService implements UsersServiceInterface
             'email' => strtolower($data['email']),
             'phone' => $data['phone'],
             'bio' => $data['bio'] ?? NULL,
+            'password' => Hash::make($data['password']),
         ]);
     }
 
