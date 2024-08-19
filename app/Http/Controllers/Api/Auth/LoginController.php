@@ -9,24 +9,29 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
 
-    public function login(LoginRequest $request)
-    {
+    public function login(LoginRequest $request){
 
-        $tokenRequest = $request->create(
-            '/oauth/token',
-            'POST',
-            [
-                'grant_type' => 'otp_grant',
-                'client_id' => 'client_id',
-                'client_secret' => 'client_secret',
-                'phone' => 'phone',
-                'otp' => 'otp',
-                'scope' => '',
-            ]
-        );
-
-        $response = app()->handle($tokenRequest);
-
-        return response()->json(json_decode($response->getContent()), $response->getStatusCode());
+        Auth
     }
+
+    // public function login(LoginRequest $request)
+    // {
+
+    //     $tokenRequest = $request->create(
+    //         '/oauth/token',
+    //         'POST',
+    //         [
+    //             'grant_type' => 'otp_grant',
+    //             'client_id' => 'client_id',
+    //             'client_secret' => 'client_secret',
+    //             'phone' => 'phone',
+    //             'otp' => 'otp',
+    //             'scope' => '',
+    //         ]
+    //     );
+
+    //     $response = app()->handle($tokenRequest);
+
+    //     return response()->json(json_decode($response->getContent()), $response->getStatusCode());
+    // }
 }

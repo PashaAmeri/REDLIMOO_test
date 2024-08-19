@@ -5,5 +5,4 @@ return [
 
     // costum providers 
     App\Providers\ServicesServiceProvider::class,
-    App\Providers\PassportOtpGrantServiceProvider::class,
 ];
