@@ -17,7 +17,6 @@ class UsersService implements UsersServiceInterface
             'email' => strtolower($data['email']),
             'phone' => $data['phone'],
             'bio' => $data['bio'] ?? NULL,
-            'password' => Hash::make($data['password']),
         ]);
     }
 
