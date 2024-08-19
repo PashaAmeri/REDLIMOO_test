@@ -16,6 +16,7 @@ class PostResource extends JsonResource
     {
 
         return [
+            'id' => => $this->id
             'writer' => [
                 'id' => $this->user_id,
                 'name' => $this->writer->name

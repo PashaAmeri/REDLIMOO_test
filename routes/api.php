@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\OtpController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Post\PostsController;
+use App\Http\Controllers\Api\Post\WriterController;
 use App\Http\Controllers\Api\User\ShowController as ProfileController;
 use App\Http\Controllers\Api\User\UpdateInfoController;
 
@@ -23,10 +24,17 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 });
 
+// Posts public routes 
+Route::get('/posts', [PostsController::class, 'index']);
+Route::get('/writer/{id}/posts', [WriterController::class, 'index']);
+
+
 Route::middleware('auth:api')->group(function () {
 
+    // profile routes
     Route::get('/profile', ProfileController::class);
     Route::patch('/profile', UpdateInfoController::class);
 
-    Route::apiResource('posts', PostsController::class);
+    // Posts routes
+    Route::post('/posts', [PostsController::class, 'store']);
 });
