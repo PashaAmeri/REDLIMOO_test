@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Interfaces\Services\OtpServiceInterface;
 use App\Interfaces\Services\UsersServiceInterface;
-use Illuminate\Http\Response;
 
 class RegisterController extends Controller
 {
 
     // protected property fot service instance
     private UsersServiceInterface $userService;
+    private OtpServiceInterface $otpService;
 
     /**
      * 
      *  Loading Serivce instances 
      */
-    public function __construct(UsersServiceInterface $userService)
+    public function __construct(UsersServiceInterface $userService, OtpServiceInterface $otpService)
     {
 
         $this->userService = $userService;
+        $this->otpService = $otpService;
     }
 
     /**
@@ -31,6 +34,17 @@ class RegisterController extends Controller
     {
 
         try {
+
+            $otp = $this->otpService->check($request->phone, $request->otp);
+
+            if (!$otp->status) {
+
+                return response()->json([
+                    'status' => false,
+                    'username' => $request->phone,
+                    'message' => $otp->message
+                ], Response::HTTP_NOT_ACCEPTABLE);
+            }
 
             // create user
             $user = $this->userService->storeUser($request->validated());

@@ -30,7 +30,9 @@ class RegisterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'phone' => 'required|digits:11|regex:/(09)[0-9]{9}/|unique:' . User::class . ',phone',
             'email' => 'required|string|email|max:255|unique:' . User::class . ',email',
+            'bio' => 'nullable|string|max:1024',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'otp' => 'required|numeric|digits:6'
         ];
     }
 }
