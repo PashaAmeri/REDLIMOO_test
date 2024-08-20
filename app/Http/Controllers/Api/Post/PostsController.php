@@ -19,13 +19,13 @@ class PostsController extends Controller
     public function index()
     {
 
-        return PostResource::collection(Post::orderBy('id', 'DESC')->paginate());
+        return PostResource::collection(Post::with('comments')->orderBy('id', 'DESC')->paginate());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreatePostRequest $request): PostResource|r
+    public function store(CreatePostRequest $request)
     {
 
         Gate::authorize('create', Post::class);

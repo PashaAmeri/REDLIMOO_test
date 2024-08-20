@@ -21,4 +21,10 @@ class Post extends Model
 
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function comments()
+    {
+
+        return $this->hasMany(Comment::class, 'post_id')->where('parent_id', NULL)->orderBy('id', 'DESC')->limit('2');
+    }
 }
