@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Hash;
 
 //----------------- Constsnts
 
-const CLIENT_SECRET = 'OtTLZqZrbYbvRTTy5ddnuAelDbF4GKGuuLIg8ys1';
+const CLIENT_SECRET = 'ti5urStwPiKE77d4uvpli4Q0riLxOjil6VjDSNIq';
 
 const WRITER_ROLE = 'Writer';
 
