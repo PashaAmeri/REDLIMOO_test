@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\Post;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreatePostRequest;
 use App\Http\Resources\PostResource;
-use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\CreatePostRequest;
+use App\Interfaces\Services\PostsServiceInterface;
 
 class PostsController extends Controller
 {
@@ -33,7 +34,12 @@ class PostsController extends Controller
 
             return PostResource::make(auth()->user()->posts()->create($request->validated()));
         } catch (\Throwable $th) {
-            //throw $th;
+
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong!',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
         }
     }
 
@@ -48,9 +54,24 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CreatePostRequest $request, string $id, PostsServiceInterface $postService)
     {
-        //
+
+        try {
+
+            $post = Post::findOrFail($id);
+
+            Gate::authorize('update', $post);
+
+            return PostResource::make($postService->updateData($request->validated(), $post));
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong!',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
+        }
     }
 
     /**

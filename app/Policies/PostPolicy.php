@@ -38,7 +38,8 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        //
+
+        return auth()->user()->checkPermissionTo('update posts') and $user->id === $post->user_id;
     }
 
     /**

@@ -19,5 +19,15 @@ class PermissionSeeder extends Seeder
             'name' => 'create posts',
             'guard_name' => 'api',
         ]);
+
+        Permission::create([
+            'name' => 'update posts',
+            'guard_name' => 'api',
+        ]);
+
+        Permission::create([
+            'name' => 'delete posts',
+            'guard_name' => 'api',
+        ]);
     }
 }

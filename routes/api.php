@@ -28,7 +28,6 @@ Route::middleware('guest')->group(function () {
 Route::get('/posts', [PostsController::class, 'index']);
 Route::get('/writer/{id}/posts', [WriterController::class, 'index']);
 
-
 Route::middleware('auth:api')->group(function () {
 
     // profile routes
@@ -37,4 +36,5 @@ Route::middleware('auth:api')->group(function () {
 
     // Posts routes
     Route::post('/posts', [PostsController::class, 'store']);
+    Route::put('/posts/{id}', [PostsController::class, 'update']);
 });

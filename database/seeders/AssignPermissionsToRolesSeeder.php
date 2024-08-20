@@ -17,6 +17,8 @@ class AssignPermissionsToRolesSeeder extends Seeder
 
         Role::findByName(WRITER_ROLE)->givePermissionTo([
             Permission::findByName('create posts', 'api'),
+            Permission::findByName('update posts', 'api'),
+            Permission::findByName('delete posts', 'api'),
         ]);
     }
 }
