@@ -18,4 +18,10 @@ class PostsService implements PostsServiceInterface
 
         return $post;
     }
+
+    public function delete(Post $post): bool
+    {
+
+        return $post->delete();
+    }
 }

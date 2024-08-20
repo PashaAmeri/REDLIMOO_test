@@ -77,8 +77,27 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, PostsServiceInterface $postService)
     {
-        //
+        try {
+
+            $post = Post::findOrFail($id);
+
+            Gate::authorize('delete', $post);
+
+            $postService->delete($post);
+
+            return response()->json([
+                'data' => [],
+                'message' => 'Post deleted successfully!',
+            ], Response::HTTP_ACCEPTED);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'data' => [],
+                'error' => 'Something went wrong!',
+                'stack' => $th,
+            ], Response::HTTP_CONFLICT);
+        }
     }
 }

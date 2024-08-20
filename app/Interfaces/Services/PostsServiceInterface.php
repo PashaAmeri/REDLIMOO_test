@@ -8,4 +8,5 @@ interface PostsServiceInterface
 {
 
     public function updateData(array $data, Post $post): Post;
+    public function delete(Post $post): bool;
 }
