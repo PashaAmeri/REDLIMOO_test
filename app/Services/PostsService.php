@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\Services\PostsServiceInterface;
+use App\Models\Comment;
 use App\Models\Post;
 
 class PostsService implements PostsServiceInterface
@@ -23,5 +24,16 @@ class PostsService implements PostsServiceInterface
     {
 
         return $post->delete();
+    }
+
+    public function addComment(array $data): Comment
+    {
+
+        return Comment::create([
+            'user_id' => auth()->id(),
+            'post_id' => $data['post_id'],
+            'parent_id' => $data['parent_id'] ?? NULL,
+            'content' => $data['content']
+        ]);
     }
 }
