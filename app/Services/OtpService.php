@@ -4,12 +4,13 @@ namespace App\Services;
 
 use Exception;
 use Carbon\Carbon;
+use App\Jobs\LoginOtpSmsJob;
 use App\Models\Otp as Model;
 use App\Notifications\LoginOtp;
 use App\Channels\KavehSmsChannel;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Notification;
 use App\Interfaces\Services\OtpServiceInterface;
-use App\Jobs\LoginOtpSmsJob;
 
 class OtpService implements OtpServiceInterface
 {
@@ -24,7 +25,8 @@ class OtpService implements OtpServiceInterface
      */
     public function generate(string $identifier, string $type, int $length = 4, int $validity = 10): object
     {
-        Model::where('identifier', $identifier)->where('valid', true)->delete();
+        // Model::where('identifier', $identifier)->where('valid', true)->delete();
+        Redis::del("otp:{$identifier}");
 
         switch ($type) {
             case "numeric":
@@ -37,11 +39,12 @@ class OtpService implements OtpServiceInterface
                 throw new Exception("{$type} is not a supported type");
         }
 
-        Model::create([
-            'identifier' => $identifier,
-            'token' => $token,
-            'validity' => $validity
-        ]);
+        // Model::create([
+        //     'identifier' => $identifier,
+        //     'token' => $token,
+        //     'validity' => $validity
+        // ]);
+        Redis::setex("otp:{$identifier}", $validity * 60, $token);
 
         // send otp sms to user phone
         dispatch(new LoginOtpSmsJob($identifier, $token));
@@ -49,7 +52,7 @@ class OtpService implements OtpServiceInterface
         return (object)[
             'status' => true,
             'token' => $token,
-            'message' => 'OTP generated'
+            'message' => 'OTP generated.'
         ];
     }
 
@@ -60,82 +63,39 @@ class OtpService implements OtpServiceInterface
      */
     public function validate(string $identifier, string $token): object
     {
-        $otp = Model::where('identifier', $identifier)->where('token', $token)->first();
+        // $otp = Model::where('identifier', $identifier)->where('token', $token)->first();
+        $otp = Redis::get("otp:{$identifier}");
 
-        if ($otp instanceof Model) {
-            if ($otp->valid) {
-                $now = Carbon::now();
-                $validity = $otp->created_at->addMinutes($otp->validity);
-
-                $otp->update(['valid' => false]);
-
-                if (strtotime($validity) < strtotime($now)) {
-                    return (object)[
-                        'status' => false,
-                        // 'message' => 'OTP Expired'
-                        'message' => 'کد یک بار مصرف منقضی شده است.'
-                    ];
-                }
-
-                $otp->update(['valid' => false]);
-
-                return (object)[
-                    'status' => true,
-                    // 'message' => 'OTP is valid'
-                    'message' => 'کد یک بار مصرف معتبر است.'
-                ];
-            }
-
-            $otp->update(['valid' => false]);
+        if ($otp === $token) {
+            // Invalidate the OTP by deleting it from Redis
+            Redis::del("otp:{$identifier}");
 
             return (object)[
-                'status' => false,
-                // 'message' => 'OTP is not valid'
-                'message' => 'کد یک بار مصرف معتر نمی باشد.'
+                'status' => true,
+                'message' => 'OTP Code apporoved.'
             ];
         } else {
             return (object)[
                 'status' => false,
-                // 'message' => 'OTP does not exist'
-                'message' => 'کد یک بار مصرف معتر نمی باشد.'
+                'message' => 'OTP code is not valid.'
             ];
         }
     }
 
     public function check(string $identifier, string $token): object
     {
-        $otp = Model::where('identifier', $identifier)->where('token', $token)->first();
+        // $otp = Model::where('identifier', $identifier)->where('token', $token)->first();
+        $otp = Redis::get("otp:{$identifier}");
 
-        if ($otp instanceof Model) {
-            if ($otp->valid) {
-                $now = Carbon::now();
-                $validity = $otp->created_at->addMinutes($otp->validity);
-
-                if (strtotime($validity) < strtotime($now)) {
-                    return (object)[
-                        'status' => false,
-                        // 'message' => 'OTP Expired'
-                        'message' => 'کد یک بار مصرف منقضی شده است.'
-                    ];
-                }
-
-                return (object)[
-                    'status' => true,
-                    // 'message' => 'OTP is valid'
-                    'message' => 'کد یک بار مصرف معتبر است.'
-                ];
-            }
-
+        if ($otp === $token) {
             return (object)[
-                'status' => false,
-                // 'message' => 'OTP is not valid'
-                'message' => 'کد یک بار مصرف معتر نمی باشد.'
+                'status' => true,
+                'message' => 'OTP Code apporoved.'
             ];
         } else {
             return (object)[
                 'status' => false,
-                // 'message' => 'OTP does not exist'
-                'message' => 'کد یک بار مصرف معتر نمی باشد.'
+                'message' => 'OTP Code is not valid.'
             ];
         }
     }
